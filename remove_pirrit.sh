@@ -1,4 +1,4 @@
-echo "*** Osx.Pirit Removal script, Amit server, @0xamit ***"
+echo "*** Osx.Pirit Removal script, Amit serper, @0xamit ***"
 
 echo "[*] Getting net_pref name"
 netPrefFileName=$(sudo defaults read /Library/Preferences/com.common.plist net_pref)
