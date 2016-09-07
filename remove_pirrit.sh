@@ -6,14 +6,20 @@ echo "If this command has an output then continue running this script. Else DONT
 echo "Press any key to continue running this script, remember - I am not responsible for any unfortunate outcomes"
 read
 
+if [ $# -eq 0 ]
+  then
+      echo "No arguments supplied, this was dangerous... but disaster has been avoided.  Read the README if you are unsure why this happened"
+      exit
+fi
+
 echo "[*] Getting net_pref name"
-netPrefFileName=$(sudo defaults read /Library/Preferences/com.common.plist net_pref)
+netPrefFileName=$1
 
 echo "[*] Netperf name is:"
 echo $netPrefFileName
 
 echo "[*] Getting appname from com.common.plist"
-appName=$(sudo defaults read /Library/Preferences/com.common.plist name)
+appName=$(echo $netPrefFileName  | sed 's/com\.//g' | sed 's/\.plist//g')
 echo $appName
 
 echo "[*] Stopping and removing LaunchDaemon"
@@ -21,6 +27,7 @@ sudo launchctl unload -w "/Library/LaunchDaemons/"$netPrefFileName
 sudo killall $appName
 
 sudo rm "/Library/LaunchDaemons/"$netPrefFileName
+sudo rm "/Library/Preferences/"$netPrefFileName
 
 echo "[*] Removing injector"
 sudo rm -r "/Library/"$appName
@@ -29,26 +36,19 @@ sudo rm /etc/change_net_settings.sh
 
 sudo pfctl -evf /etc/pf.conf
 
-servicePrefFileName=$(sudo defaults read /Library/Preferences/com.common.plist service_pref)
-echo “[*] Net pref file name:”
-echo $netPrefFileName
-
-appName=$(sudo defaults read /Library/Preferences/com.common.plist name)
-echo “[*] App name is:”
-echo $appName
-
 echo “[*] Removing LaunchDaemon”
-sudo launchctl unload -w "/Library/LaunchDaemons/"$servicePrefFileName
+sudo launchctl unload -w "/Library/LaunchDaemons/"$netPrefFileName
 echo [*] Killing app and osascript”
 sudo killall $appName
 sudo killall osascript
 
 echo “[*] Cleaning up…”
-sudo rm "/Library/LaunchDaemons/"$servicePrefFileName
+sudo rm "/Library/LaunchDaemons/"$netPrefFileName
 
 sudo rm -r "/Library/"$appName
 
 echo “[*] Removing pirrit launching script”
-sudo rm /etc/run_app.sh
+sudo rm "/etc/"$appName".sh"
+sudo rm "/etc/"$appName".conf"
 
 echo “Script finished\n”
