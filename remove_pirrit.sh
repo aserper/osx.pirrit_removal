@@ -18,7 +18,7 @@ netPrefFileName=$1
 echo "[*] Netperf name is:"
 echo $netPrefFileName
 
-echo "[*] Getting appname from com.common.plist"
+echo "[*] Getting appname from $1"
 appName=$(echo $netPrefFileName  | sed 's/com\.//g' | sed 's/\.plist//g')
 echo $appName
 
@@ -51,4 +51,4 @@ echo “[*] Removing pirrit launching script”
 sudo rm "/etc/"$appName".sh"
 sudo rm "/etc/"$appName".conf"
 
-echo “Script finished\n”
+echo “Script finished”
